@@ -4,77 +4,77 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BuildMyProject — Science Model Making, Guwahati</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --accent: #3eb8ff;
-      --accent-light: #70d0ff;
-      --bg: #0a0f1e;
-      --bg2: #0d1324;
-      --text: #f0f4ff;
-      --text-muted: rgba(200,220,255,0.6);
-      --text-faint: rgba(160,200,255,0.45);
-      --border: rgba(80,160,255,0.12);
-      --border-accent: rgba(62,184,255,0.25);
+      --accent2: #00ffd5;
+      --bg: #04080f;
+      --text: #e8f4ff;
+      --text-muted: rgba(180,220,255,0.6);
+      --text-faint: rgba(140,190,255,0.4);
+      --border: rgba(62,184,255,0.12);
+      --border-accent: rgba(62,184,255,0.3);
     }
 
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'DM Sans', sans-serif;
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
       overflow-x: hidden;
+    }
+
+    /* CANVAS */
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
     /* NAV */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 18px 40px;
+      z-index: 200;
+      padding: 16px 40px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(10,15,30,0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(4,8,15,0.7);
+      backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
     }
 
     .nav-logo {
-      font-family: 'Syne', sans-serif;
       font-weight: 800;
       font-size: 18px;
       color: var(--text);
       text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      letter-spacing: -0.3px;
     }
 
     .nav-logo span { color: var(--accent); }
 
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--accent);
-      color: #02080f;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
-      font-size: 14px;
-      padding: 9px 20px;
-      border-radius: 100px;
+    .nav-links { display: flex; gap: 32px; }
+
+    .nav-links a {
+      color: var(--text-muted);
       text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+      letter-spacing: 0.02em;
     }
 
-    .nav-cta:hover { background: var(--accent-light); transform: translateY(-1px); }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* SECTIONS base */
+    section { position: relative; z-index: 10; }
 
     /* HERO */
     .hero {
@@ -82,174 +82,183 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 120px 40px 80px;
+      align-items: center;
+      text-align: center;
+      padding: 100px 24px 80px;
       position: relative;
       overflow: hidden;
     }
 
-    .grid-bg {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(50,140,255,0.07) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(50,140,255,0.07) 1px, transparent 1px);
-      background-size: 40px 40px;
-      pointer-events: none;
-    }
-
-    .glow-blob {
-      position: absolute;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(62,184,255,0.08) 0%, transparent 70%);
-      top: 50%;
-      right: -100px;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      position: relative;
-      max-width: 800px;
-    }
-
-    .badge {
+    .hero-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      background: rgba(50,180,255,0.1);
-      border: 1px solid rgba(50,180,255,0.3);
-      color: #60c8ff;
+      gap: 8px;
+      background: rgba(62,184,255,0.08);
+      border: 1px solid rgba(62,184,255,0.25);
+      color: var(--accent);
       font-size: 12px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
+      font-weight: 600;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      padding: 6px 14px;
+      padding: 7px 16px;
       border-radius: 100px;
-      margin-bottom: 28px;
-      animation: fadeUp 0.6s ease both;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s ease forwards;
     }
 
-    .badge-dot {
-      width: 6px; height: 6px;
+    .pulse-dot {
+      width: 7px; height: 7px;
       border-radius: 50%;
-      background: #60c8ff;
-      animation: pulse 2s ease-in-out infinite;
+      background: var(--accent);
+      animation: pulseGlow 2s ease-in-out infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.6); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(62,184,255,0.6); opacity: 1; }
+      50% { box-shadow: 0 0 0 6px rgba(62,184,255,0); opacity: 0.5; }
     }
 
     .hero-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(36px, 6vw, 64px);
-      line-height: 1.06;
-      margin-bottom: 20px;
-      animation: fadeUp 0.6s 0.1s ease both;
+      font-size: clamp(40px, 8vw, 88px);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.35s ease forwards;
     }
 
-    .hero-title .accent { color: var(--accent); }
+    .hero-title .line2 {
+      display: block;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
     .hero-sub {
-      font-size: clamp(15px, 2vw, 18px);
-      font-weight: 300;
+      font-size: clamp(15px, 2.5vw, 19px);
+      font-weight: 400;
       color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 520px;
-      margin-bottom: 40px;
-      animation: fadeUp 0.6s 0.2s ease both;
+      line-height: 1.75;
+      max-width: 560px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s ease forwards;
     }
 
-    .cta-row {
+    .hero-cta {
+      opacity: 0;
+      animation: fadeUp 0.8s 0.65s ease forwards;
       display: flex;
-      align-items: center;
-      gap: 20px;
+      gap: 16px;
       flex-wrap: wrap;
-      animation: fadeUp 0.6s 0.3s ease both;
+      justify-content: center;
     }
 
-    .btn-primary {
+    .btn-glow {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       background: var(--accent);
       color: #02080f;
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 500;
+      font-weight: 700;
       font-size: 16px;
-      padding: 14px 28px;
+      padding: 16px 32px;
       border-radius: 100px;
       text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(62,184,255,0.3);
     }
 
-    .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); }
+    .btn-glow:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 50px rgba(62,184,255,0.5);
+    }
 
-    .btn-secondary {
-      display: inline-flex;
+    .btn-glow::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+
+    .btn-glow:hover::after { transform: translateX(100%); }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
       align-items: center;
       gap: 8px;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      padding: 14px 24px;
-      border-radius: 100px;
-      border: 1px solid var(--border-accent);
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s;
+      color: var(--text-faint);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s 1.2s ease forwards;
     }
 
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* ATOM SVG */
-    .atom-wrap {
-      position: absolute;
-      right: 60px;
-      top: 50%;
-      transform: translateY(-50%);
-      opacity: 0.15;
-      animation: floatY 7s ease-in-out infinite;
-      pointer-events: none;
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollDrop 1.8s ease-in-out infinite;
     }
 
-    @keyframes floatY {
-      0%, 100% { transform: translateY(-50%); }
-      50% { transform: translateY(calc(-50% - 16px)); }
+    @keyframes scrollDrop {
+      0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+      50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+      100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
     }
 
-    /* STATS */
-    .stats-row {
-      display: flex;
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* STATS TICKER */
+    .stats-strip {
+      position: relative;
+      z-index: 10;
+      background: rgba(62,184,255,0.05);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      background: var(--bg2);
+      display: flex;
+      overflow: hidden;
     }
 
-    .stat {
+    .stats-inner {
+      display: flex;
+      width: 100%;
+    }
+
+    .stat-item {
       flex: 1;
       text-align: center;
-      padding: 28px 12px;
+      padding: 28px 16px;
       border-right: 1px solid var(--border);
+      position: relative;
     }
 
-    .stat:last-child { border-right: none; }
+    .stat-item:last-child { border-right: none; }
 
     .stat-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--accent);
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       line-height: 1;
       margin-bottom: 6px;
     }
@@ -263,217 +272,315 @@
 
     /* SERVICES */
     .services {
-      padding: 80px 40px;
-      background: var(--bg2);
+      padding: 100px 40px;
+      position: relative;
+      z-index: 10;
     }
 
-    .section-tag {
+    .section-eyebrow {
       font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
+      font-weight: 700;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .section-title {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(24px, 4vw, 36px);
-      font-weight: 800;
-      margin-bottom: 40px;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 56px;
       color: var(--text);
     }
 
     .service-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
     }
 
     .service-card {
-      background: rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.02);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px 24px;
-      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      border-radius: 20px;
+      padding: 32px 28px;
+      cursor: default;
+      transition: border-color 0.3s, transform 0.3s, background 0.3s;
+      position: relative;
+      overflow: hidden;
     }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .service-card:hover::before { transform: scaleX(1); }
 
     .service-card:hover {
-      border-color: rgba(62,184,255,0.35);
-      background: rgba(62,184,255,0.05);
-      transform: translateY(-3px);
+      border-color: rgba(62,184,255,0.4);
+      background: rgba(62,184,255,0.04);
+      transform: translateY(-6px);
     }
 
-    .service-icon { font-size: 28px; margin-bottom: 14px; display: block; }
-
-    .service-name {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 16px;
-      color: #d0e8ff;
-      margin-bottom: 8px;
+    .card-icon {
+      font-size: 36px;
+      margin-bottom: 18px;
+      display: block;
+      filter: drop-shadow(0 0 12px rgba(62,184,255,0.3));
     }
 
-    .service-desc {
-      font-size: 13px;
-      color: rgba(160,200,255,0.5);
-      line-height: 1.6;
-      font-weight: 300;
+    .card-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      letter-spacing: -0.3px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
     }
 
     /* HOW IT WORKS */
     .how {
-      padding: 80px 40px;
-      background: var(--bg);
+      padding: 100px 40px;
+      position: relative;
+      z-index: 10;
+      background: rgba(62,184,255,0.02);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
     .steps {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 0;
-      margin-top: 40px;
+      margin-top: 56px;
       position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 28px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent2), var(--accent), transparent);
+      opacity: 0.3;
     }
 
     .step {
-      padding: 28px 24px;
+      padding: 0 24px;
+      text-align: center;
       position: relative;
     }
 
-    .step:not(:last-child)::after {
-      content: '→';
-      position: absolute;
-      right: -12px;
-      top: 36px;
-      color: var(--accent);
+    .step-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(62,184,255,0.1);
+      border: 1px solid rgba(62,184,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
       font-size: 20px;
-      opacity: 0.4;
+      font-weight: 900;
+      color: var(--accent);
+      position: relative;
+      z-index: 1;
+      transition: background 0.3s, box-shadow 0.3s;
     }
 
-    .step-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 40px;
-      font-weight: 800;
-      color: rgba(62,184,255,0.15);
-      line-height: 1;
-      margin-bottom: 12px;
+    .step:hover .step-circle {
+      background: rgba(62,184,255,0.2);
+      box-shadow: 0 0 24px rgba(62,184,255,0.3);
     }
 
     .step-title {
-      font-family: 'Syne', sans-serif;
+      font-size: 16px;
       font-weight: 700;
-      font-size: 15px;
-      color: #d0e8ff;
-      margin-bottom: 6px;
+      color: var(--text);
+      margin-bottom: 10px;
     }
 
     .step-desc {
       font-size: 13px;
-      color: var(--text-faint);
-      line-height: 1.6;
+      color: var(--text-muted);
+      line-height: 1.65;
     }
 
     /* DELIVERY */
     .delivery {
-      padding: 80px 40px;
-      background: var(--bg);
+      padding: 100px 40px;
+      position: relative;
+      z-index: 10;
     }
 
-    .delivery-sub {
+    .delivery-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .delivery-text p {
       font-size: 16px;
-      font-weight: 300;
       color: var(--text-muted);
       line-height: 1.8;
-      max-width: 620px;
-      margin-bottom: 32px;
+      margin-top: 20px;
     }
 
     .delivery-chips {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 28px;
     }
 
     .d-chip {
-      background: rgba(62,184,255,0.07);
+      background: rgba(62,184,255,0.06);
       border: 1px solid var(--border-accent);
       border-radius: 100px;
       padding: 8px 16px;
       font-size: 13px;
-      color: #90d8ff;
-      font-weight: 400;
+      color: #80d8ff;
+      transition: background 0.2s, transform 0.2s;
+      cursor: default;
     }
 
-    @media (max-width: 640px) {
-      .delivery { padding: 60px 20px; }
-    }
-    .contact {
-      padding: 80px 40px;
-      background: var(--bg2);
+    .d-chip:hover {
+      background: rgba(62,184,255,0.14);
+      transform: scale(1.04);
     }
 
-    .contact-card {
-      background: rgba(62,184,255,0.05);
-      border: 1px solid var(--border-accent);
-      border-radius: 20px;
-      padding: 48px 40px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 32px;
-      max-width: 900px;
-      margin: 0 auto;
+    .map-visual {
+      background: rgba(62,184,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      font-size: 80px;
+      line-height: 1;
+      position: relative;
+      overflow: hidden;
     }
 
-    .contact-left .tag {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      margin-bottom: 10px;
+    .map-visual::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, rgba(62,184,255,0.08), transparent 70%);
+      animation: mapPulse 3s ease-in-out infinite;
     }
 
-    .contact-left h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(22px, 3vw, 32px);
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 8px;
+    @keyframes mapPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
     }
 
-    .contact-left p {
+    .map-label {
       font-size: 14px;
-      color: var(--text-muted);
-      font-weight: 300;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 16px;
+      letter-spacing: 0.05em;
     }
 
-    .contact-chips {
+    /* CONTACT */
+    .contact {
+      padding: 100px 40px;
+      position: relative;
+      z-index: 10;
+      background: rgba(0,255,213,0.02);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .contact-inner .section-title { margin-bottom: 12px; }
+
+    .contact-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+
+    .contact-cards {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 14px;
     }
 
-    .chip {
+    .contact-link {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(62,184,255,0.1);
-      border: 1px solid var(--border-accent);
-      border-radius: 100px;
-      padding: 10px 18px;
-      font-size: 14px;
-      color: #90d8ff;
+      gap: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
       text-decoration: none;
-      transition: background 0.2s, border-color 0.2s;
+      color: var(--text);
+      transition: border-color 0.3s, background 0.3s, transform 0.2s;
+      text-align: left;
     }
 
-    .chip:hover { background: rgba(62,184,255,0.18); border-color: rgba(62,184,255,0.5); }
+    .contact-link:hover {
+      border-color: var(--accent);
+      background: rgba(62,184,255,0.06);
+      transform: translateX(6px);
+    }
 
-    .chip-icon { font-size: 18px; }
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(62,184,255,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .contact-info-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-faint);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+
+    .contact-info-val {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
 
     /* FOOTER */
     footer {
+      position: relative;
+      z-index: 10;
       padding: 28px 40px;
       border-top: 1px solid var(--border);
       display: flex;
@@ -481,269 +588,319 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 12px;
-      background: var(--bg);
+      background: rgba(4,8,15,0.9);
     }
 
-    footer .logo {
-      font-family: 'Syne', sans-serif;
+    .footer-logo {
       font-weight: 800;
       font-size: 16px;
       color: var(--text);
     }
 
-    footer .logo span { color: var(--accent); }
+    .footer-logo span { color: var(--accent); }
 
     footer p {
       font-size: 12px;
       color: var(--text-faint);
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
-      nav { padding: 14px 20px; }
-
-      .hero {
-        min-height: 100svh;
-        padding: 90px 20px 60px;
-        text-align: center;
-        align-items: center;
-      }
-
-      .hero-inner { max-width: 100%; }
-
-      .atom-wrap { display: none; }
-      .glow-blob { display: none; }
-
-      .badge { margin-left: auto; margin-right: auto; }
-
-      .hero-title { font-size: clamp(32px, 9vw, 48px); }
-
-      .hero-sub {
-        font-size: 15px;
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      .cta-row { justify-content: center; }
-
-      .btn-primary { font-size: 15px; padding: 13px 24px; width: 100%; justify-content: center; }
-
-      .stats-row { flex-wrap: wrap; }
-      .stat { min-width: 50%; border-bottom: 1px solid var(--border); }
-
-      .services { padding: 56px 20px; }
-      .service-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
-      .service-card { padding: 20px 16px; }
-      .service-name { font-size: 14px; }
-
-      .how { padding: 56px 20px; }
-      .steps { grid-template-columns: 1fr 1fr; gap: 0; }
-      .step { padding: 20px 16px; }
-      .step:not(:last-child)::after { display: none; }
-
-      .delivery { padding: 56px 20px; }
-      .delivery-sub { font-size: 14px; }
-      .delivery-chips { gap: 8px; }
-      .d-chip { font-size: 12px; padding: 6px 12px; }
-
-      .contact { padding: 56px 20px; }
-      .contact-card {
-        padding: 28px 20px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .contact-chips { width: 100%; }
-      .chip { justify-content: center; width: 100%; }
-
-      footer {
-        padding: 20px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-      }
-
-      .section-title { font-size: clamp(22px, 6vw, 30px); }
+    /* SCROLL REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
-    @media (max-width: 400px) {
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      nav { padding: 14px 20px; }
+      .nav-links { display: none; }
+
+      .hero { padding: 90px 20px 70px; }
+      .hero-title { letter-spacing: -1px; }
+
+      .stats-strip { overflow-x: auto; }
+      .stats-inner { min-width: 480px; }
+
+      .services { padding: 70px 20px; }
+      .service-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .service-card { padding: 22px 18px; }
+
+      .how { padding: 70px 20px; }
+      .steps { grid-template-columns: 1fr 1fr; gap: 32px; }
+      .steps::before { display: none; }
+
+      .delivery { padding: 70px 20px; }
+      .delivery-body { grid-template-columns: 1fr; gap: 40px; }
+
+      .contact { padding: 70px 20px; }
+
+      footer { padding: 20px; flex-direction: column; align-items: flex-start; gap: 6px; }
+    }
+
+    @media (max-width: 440px) {
       .service-grid { grid-template-columns: 1fr; }
       .steps { grid-template-columns: 1fr; }
-      .hero-title { font-size: 30px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a class="nav-logo" href="#">⚗️ <span>BuildMyProject</span></a>
-  </nav>
+<canvas id="particle-canvas"></canvas>
 
-  <!-- HERO -->
-  <section class="hero" id="home">
-    <div class="grid-bg"></div>
-    <div class="glow-blob"></div>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">⚗️ <span>BuildMyProject</span></a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#how">How it works</a>
+    <a href="#delivery">Delivery</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
 
-    <svg class="atom-wrap" width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <ellipse cx="160" cy="160" rx="140" ry="52" stroke="#3eb8ff" stroke-width="2.5"/>
-      <ellipse cx="160" cy="160" rx="140" ry="52" stroke="#3eb8ff" stroke-width="2.5" transform="rotate(60 160 160)"/>
-      <ellipse cx="160" cy="160" rx="140" ry="52" stroke="#3eb8ff" stroke-width="2.5" transform="rotate(120 160 160)"/>
-      <circle cx="160" cy="160" r="18" fill="#3eb8ff"/>
-      <circle cx="300" cy="160" r="9" fill="#60d0ff"/>
-      <circle cx="90" cy="42" r="6" fill="#3eb8ff" opacity="0.7"/>
-      <circle cx="230" cy="278" r="7" fill="#3eb8ff" opacity="0.5"/>
-    </svg>
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-eyebrow"><span class="pulse-dot"></span> Guwahati's science project experts</div>
+  <h1 class="hero-title">
+    We Build Your<br>
+    <span class="line2">Project.</span>
+    You Present.
+  </h1>
+  <p class="hero-sub">
+    Guwahati's go-to science project model makers. Professional, custom models for school exhibitions and competitions — delivered anywhere across Guwahati.
+  </p>
+  <div class="hero-cta">
+    <a class="btn-glow" href="https://wa.me/917005464704" target="_blank">🔬 Get a free quote</a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
 
-    <div class="hero-inner">
-      <div class="badge"><span class="badge-dot"></span> Guwahati's science project experts</div>
-      <h1 class="hero-title">
-        We Build Your<br>
-        <span class="accent">Project.</span><br>
-        You Present.
-      </h1>
-      <p class="hero-sub">
-        Guwahati's go-to science project model makers. We craft professional, custom models for school exhibitions and competitions — and deliver anywhere across Guwahati. We build it, you shine.
-      </p>
-      <div class="cta-row">
-        <a class="btn-primary" href="https://wa.me/917005464704" target="_blank">🔬 Get a free quote</a>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat">
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-item">
       <div class="stat-num">50+</div>
       <div class="stat-label">Projects done</div>
     </div>
-    <div class="stat">
+    <div class="stat-item">
       <div class="stat-num">24h</div>
       <div class="stat-label">Response time</div>
     </div>
-    <div class="stat">
+    <div class="stat-item">
       <div class="stat-num">100%</div>
       <div class="stat-label">Custom made</div>
     </div>
-    <div class="stat">
+    <div class="stat-item">
       <div class="stat-num">All</div>
       <div class="stat-label">Grade levels</div>
     </div>
   </div>
+</div>
 
-  <!-- SERVICES -->
-  <section class="services" id="services">
-    <div class="section-tag">What we make</div>
-    <h2 class="section-title">Every subject. Every grade.</h2>
-    <div class="service-grid">
-      <div class="service-card">
-        <span class="service-icon">⚡</span>
-        <div class="service-name">Working models</div>
-        <div class="service-desc">Circuits, motors, solar panels, wind turbines — models that actually function and impress judges.</div>
-      </div>
-      <div class="service-card">
-        <span class="service-icon">🧬</span>
-        <div class="service-name">Biology models</div>
-        <div class="service-desc">Cell structure, DNA helix, human organs — detailed, colorful, and scientifically accurate.</div>
-      </div>
-      <div class="service-card">
-        <span class="service-icon">🌍</span>
-        <div class="service-name">3D displays</div>
-        <div class="service-desc">Volcanoes, ecosystems, geography terrain maps, and environmental science projects.</div>
-      </div>
-      <div class="service-card">
-        <span class="service-icon">🔭</span>
-        <div class="service-name">Physics models</div>
-        <div class="service-desc">Simple machines, force demonstrations, planetary motion, and optics displays.</div>
-      </div>
-      <div class="service-card">
-        <span class="service-icon">🧪</span>
-        <div class="service-name">Chemistry boards</div>
-        <div class="service-desc">Periodic table models, molecular structures, reaction diagrams, and element charts.</div>
-      </div>
-      <div class="service-card">
-        <span class="service-icon">📐</span>
-        <div class="service-name">Custom orders</div>
-        <div class="service-desc">Have a unique topic? Share your requirements and we'll craft exactly what you need.</div>
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="section-eyebrow reveal">What we make</div>
+  <h2 class="section-title reveal">Every subject.<br>Every grade.</h2>
+  <div class="service-grid">
+    <div class="service-card reveal reveal-delay-1">
+      <span class="card-icon">⚡</span>
+      <div class="card-name">Working models</div>
+      <div class="card-desc">Circuits, motors, solar panels, wind turbines — models that actually function and impress judges.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <span class="card-icon">🧬</span>
+      <div class="card-name">Biology models</div>
+      <div class="card-desc">Cell structure, DNA helix, human organs — detailed, colorful, and scientifically accurate.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <span class="card-icon">🌍</span>
+      <div class="card-name">3D displays</div>
+      <div class="card-desc">Volcanoes, ecosystems, geography terrain maps, and environmental science projects.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-1">
+      <span class="card-icon">🔭</span>
+      <div class="card-name">Physics models</div>
+      <div class="card-desc">Simple machines, force demonstrations, planetary motion, and optics displays.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-2">
+      <span class="card-icon">🧪</span>
+      <div class="card-name">Chemistry boards</div>
+      <div class="card-desc">Periodic table models, molecular structures, reaction diagrams, and element charts.</div>
+    </div>
+    <div class="service-card reveal reveal-delay-3">
+      <span class="card-icon">📐</span>
+      <div class="card-name">Custom orders</div>
+      <div class="card-desc">Have a unique topic? Share your requirements and we'll craft exactly what you need.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-eyebrow reveal">The process</div>
+  <h2 class="section-title reveal">Simple as 1-2-3</h2>
+  <div class="steps">
+    <div class="step reveal reveal-delay-1">
+      <div class="step-circle">01</div>
+      <div class="step-title">Contact us</div>
+      <div class="step-desc">Share your topic, grade level, and deadline via WhatsApp or call.</div>
+    </div>
+    <div class="step reveal reveal-delay-2">
+      <div class="step-circle">02</div>
+      <div class="step-title">We plan it</div>
+      <div class="step-desc">We discuss design, materials, and send you a quote. Quick and transparent.</div>
+    </div>
+    <div class="step reveal reveal-delay-3">
+      <div class="step-circle">03</div>
+      <div class="step-title">We build it</div>
+      <div class="step-desc">Your model is crafted with care and delivered before your deadline.</div>
+    </div>
+    <div class="step reveal reveal-delay-4">
+      <div class="step-circle">04</div>
+      <div class="step-title">You present</div>
+      <div class="step-desc">Walk in confident with a model that stands out from the crowd.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section class="delivery" id="delivery">
+  <div class="delivery-body">
+    <div class="delivery-text reveal">
+      <div class="section-eyebrow">Where we serve</div>
+      <h2 class="section-title">Based in Guwahati.<br>Delivering everywhere.</h2>
+      <p>We're a local Guwahati business. Once your model is ready, we deliver it straight to your door — no need to travel.</p>
+      <div class="delivery-chips">
+        <div class="d-chip">📍 Dispur</div>
+        <div class="d-chip">📍 Paltan Bazaar</div>
+        <div class="d-chip">📍 Beltola</div>
+        <div class="d-chip">📍 Kahilipara</div>
+        <div class="d-chip">📍 Narengi</div>
+        <div class="d-chip">📍 Zoo Road</div>
+        <div class="d-chip">📍 Rukminigaon</div>
+        <div class="d-chip">📍 Ganeshguri</div>
+        <div class="d-chip">📍 + Anywhere in Guwahati</div>
       </div>
     </div>
-  </section>
-
-  <!-- HOW IT WORKS -->
-  <section class="how" id="how">
-    <div class="section-tag">The process</div>
-    <h2 class="section-title">Simple as 1-2-3</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div class="step-title">Contact us</div>
-        <div class="step-desc">Share your project topic, grade level, and deadline via WhatsApp or call.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div class="step-title">We plan it</div>
-        <div class="step-desc">We discuss design, materials, and send you a quote. Quick and transparent.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div class="step-title">We build it</div>
-        <div class="step-desc">Your model is crafted with care and delivered before your deadline.</div>
-      </div>
-      <div class="step">
-        <div class="step-num">04</div>
-        <div class="step-title">You present</div>
-        <div class="step-desc">Walk in confident with a professional model that stands out from the crowd.</div>
-      </div>
+    <div class="map-visual reveal reveal-delay-2">
+      🗺️
+      <div class="map-label">Guwahati, Assam</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- DELIVERY -->
-  <section class="delivery" id="delivery">
-    <div class="section-tag">Where we serve</div>
-    <h2 class="section-title">Based in Guwahati.<br>Delivering all over Guwahati.</h2>
-    <p class="delivery-sub">We're a local Guwahati business. Once your model is ready, we deliver it straight to your door — no need to travel. Whether you're in Dispur, Paltan Bazaar, Beltola, Kahilipara, Narengi, Zoo Road, or anywhere else in the city, we've got you covered.</p>
-    <div class="delivery-chips">
-      <div class="d-chip">📍 Dispur</div>
-      <div class="d-chip">📍 Paltan Bazaar</div>
-      <div class="d-chip">📍 Beltola</div>
-      <div class="d-chip">📍 Kahilipara</div>
-      <div class="d-chip">📍 Narengi</div>
-      <div class="d-chip">📍 Zoo Road</div>
-      <div class="d-chip">📍 Rukminigaon</div>
-      <div class="d-chip">📍 Ganeshguri</div>
-      <div class="d-chip">📍 + anywhere in Guwahati</div>
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div class="section-eyebrow reveal">Get in touch</div>
+    <h2 class="section-title reveal">Ready to start<br>your project?</h2>
+    <p class="contact-sub reveal">Message us on WhatsApp, call, or email — we respond fast and deliver across Guwahati.</p>
+    <div class="contact-cards">
+      <a class="contact-link reveal reveal-delay-1" href="tel:+917005464704">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-info-label">Call us</div>
+          <div class="contact-info-val">+91 70054 64704</div>
+        </div>
+      </a>
+      <a class="contact-link reveal reveal-delay-2" href="https://wa.me/917005464704" target="_blank">
+        <div class="contact-icon">💬</div>
+        <div>
+          <div class="contact-info-label">WhatsApp</div>
+          <div class="contact-info-val">70054 64704 — message anytime</div>
+        </div>
+      </a>
+      <a class="contact-link reveal reveal-delay-3" href="mailto:shubham_ray@outlook.com">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-val">shubham_ray@outlook.com</div>
+        </div>
+      </a>
     </div>
-  </section>
-  <section class="contact" id="contact">
-    <div class="contact-card">
-      <div class="contact-left">
-        <div class="tag">Get in touch</div>
-        <h2>Ready to start your project?</h2>
-        <p>Message us on WhatsApp or call — we respond fast and deliver across Guwahati.</p>
-      </div>
-      <div class="contact-chips">
-        <a class="chip" href="tel:+917005464704">
-          <span class="chip-icon">📞</span>
-          +91 70054 64704
-        </a>
-        <a class="chip" href="https://wa.me/917005464704" target="_blank">
-          <span class="chip-icon">💬</span>
-          WhatsApp: 70054 64704
-        </a>
-        <a class="chip" href="mailto:shubham_ray@outlook.com">
-          <span class="chip-icon">✉️</span>
-          shubham_ray@outlook.com
-        </a>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="logo">⚗️ <span>BuildMyProject</span></div>
-    <p>BuildMyProject · Custom school science project model making · Based in Guwahati · Delivery all over Guwahati</p>
-  </footer>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">⚗️ <span>BuildMyProject</span></div>
+  <p>Custom school science project model making · Based in Guwahati · Delivery all over Guwahati</p>
+</footer>
+
+<script>
+  // PARTICLE CANVAS
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  function rand(a, b) { return Math.random() * (b - a) + a; }
+
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = rand(0, W);
+      this.y = rand(0, H);
+      this.r = rand(0.5, 2);
+      this.vx = rand(-0.15, 0.15);
+      this.vy = rand(-0.3, -0.05);
+      this.alpha = rand(0.2, 0.7);
+      this.color = Math.random() > 0.5 ? '62,184,255' : '0,255,213';
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      this.alpha -= 0.0008;
+      if (this.alpha <= 0 || this.y < -10) this.reset();
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>
