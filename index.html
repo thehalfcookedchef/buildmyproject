@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BuildMyProject — Science Model Making, Guwahati</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #3eb8ff;
+      --accent-light: #70d0ff;
+      --bg: #0a0f1e;
+      --bg2: #0d1324;
+      --text: #f0f4ff;
+      --text-muted: rgba(200,220,255,0.6);
+      --text-faint: rgba(160,200,255,0.45);
+      --border: rgba(80,160,255,0.12);
+      --border-accent: rgba(62,184,255,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(10,15,30,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #02080f;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 9px 20px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .nav-cta:hover { background: var(--accent-light); transform: translateY(-1px); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(50,140,255,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(50,140,255,0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    .glow-blob {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(62,184,255,0.08) 0%, transparent 70%);
+      top: 50%;
+      right: -100px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      max-width: 800px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(50,180,255,0.1);
+      border: 1px solid rgba(50,180,255,0.3);
+      color: #60c8ff;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #60c8ff;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.6); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 1.06;
+      margin-bottom: 20px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero-title .accent { color: var(--accent); }
+
+    .hero-sub {
+      font-size: clamp(15px, 2vw, 18px);
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 40px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #02080f;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      padding: 14px 28px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover { background: var(--accent-light); transform: translateY(-2px); }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      font-size: 15px;
+      padding: 14px 24px;
+      border-radius: 100px;
+      border: 1px solid var(--border-accent);
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ATOM SVG */
+    .atom-wrap {
+      position: absolute;
+      right: 60px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.15;
+      animation: floatY 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatY {
+      0%, 100% { transform: translateY(-50%); }
+      50% { transform: translateY(calc(-50% - 16px)); }
+    }
+
+    /* STATS */
+    .stats-row {
+      display: flex;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 28px 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-faint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* SERVICES */
+    .services {
+      padding: 80px 40px;
+      background: var(--bg2);
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 800;
+      margin-bottom: 40px;
+      color: var(--text);
+    }
+
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .service-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+
+    .service-card:hover {
+      border-color: rgba(62,184,255,0.35);
+      background: rgba(62,184,255,0.05);
+      transform: translateY(-3px);
+    }
+
+    .service-icon { font-size: 28px; margin-bottom: 14px; display: block; }
+
+    .service-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: #d0e8ff;
+      margin-bottom: 8px;
+    }
+
+    .service-desc {
+      font-size: 13px;
+      color: rgba(160,200,255,0.5);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* HOW IT WORKS */
+    .how {
+      padding: 80px 40px;
+      background: var(--bg);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0;
+      margin-top: 40px;
+      position: relative;
+    }
+
+    .step {
+      padding: 28px 24px;
+      position: relative;
+    }
+
+    .step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -12px;
+      top: 36px;
+      color: var(--accent);
+      font-size: 20px;
+      opacity: 0.4;
+    }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 40px;
+      font-weight: 800;
+      color: rgba(62,184,255,0.15);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .step-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: #d0e8ff;
+      margin-bottom: 6px;
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--text-faint);
+      line-height: 1.6;
+    }
+
+    /* DELIVERY */
+    .delivery {
+      padding: 80px 40px;
+      background: var(--bg);
+    }
+
+    .delivery-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 620px;
+      margin-bottom: 32px;
+    }
+
+    .delivery-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .d-chip {
+      background: rgba(62,184,255,0.07);
+      border: 1px solid var(--border-accent);
+      border-radius: 100px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #90d8ff;
+      font-weight: 400;
+    }
+
+    @media (max-width: 640px) {
+      .delivery { padding: 60px 20px; }
+    }
+    .contact {
+      padding: 80px 40px;
+      background: var(--bg2);
+    }
+
+    .contact-card {
+      background: rgba(62,184,255,0.05);
+      border: 1px solid var(--border-accent);
+      border-radius: 20px;
+      padding: 48px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .contact-left .tag {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .contact-left h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .contact-left p {
+      font-size: 14px;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .contact-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(62,184,255,0.1);
+      border: 1px solid var(--border-accent);
+      border-radius: 100px;
+      padding: 10px 18px;
+      font-size: 14px;
+      color: #90d8ff;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .chip:hover { background: rgba(62,184,255,0.18); border-color: rgba(62,184,255,0.5); }
+
+    .chip-icon { font-size: 18px; }
+
+    /* FOOTER */
+    footer {
+      padding: 28px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--bg);
+    }
+
+    footer .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    footer .logo span { color: var(--accent); }
+
+    footer p {
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      nav { padding: 16px 20px; }
+      .hero { padding: 100px 20px 60px; }
+      .atom-wrap { display: none; }
+      .stats-row { flex-wrap: wrap; }
+      .stat { min-width: 50%; border-bottom: 1px solid var(--border); }
+      .services, .how, .contact { padding: 60px 20px; }
+      .contact-card { padding: 32px 24px; }
+      footer { padding: 24px 20px; }
+      .step:not(:last-child)::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">⚗️ <span>BuildMyProject</span></a>
+    <a class="nav-cta" href="https://wa.me/917005464704" target="_blank">Get a quote →</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="grid-bg"></div>
+    <div class="glow-blob"></div>
+
+    <svg class="atom-wrap" width="320" height="320" viewBox="0 0 320 320" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="160" cy="160" rx="140" ry="52" stroke="#3eb8ff" stroke-width="2.5"/>
+      <ellipse cx="160" cy="160" rx="140" ry="52" stroke="#3eb8ff" stroke-width="2.5" transform="rotate(60 160 160)"/>
+      <ellipse cx="160" cy="160" rx="140" ry="52" stroke="#3eb8ff" stroke-width="2.5" transform="rotate(120 160 160)"/>
+      <circle cx="160" cy="160" r="18" fill="#3eb8ff"/>
+      <circle cx="300" cy="160" r="9" fill="#60d0ff"/>
+      <circle cx="90" cy="42" r="6" fill="#3eb8ff" opacity="0.7"/>
+      <circle cx="230" cy="278" r="7" fill="#3eb8ff" opacity="0.5"/>
+    </svg>
+
+    <div class="hero-inner">
+      <div class="badge"><span class="badge-dot"></span> Guwahati's science project experts</div>
+      <h1 class="hero-title">
+        We Build Your<br>
+        <span class="accent">Project.</span><br>
+        You Present.
+      </h1>
+      <p class="hero-sub">
+        Guwahati's go-to science project model makers. We craft professional, custom models for school exhibitions and competitions — and deliver anywhere across Guwahati. We build it, you shine.
+      </p>
+      <div class="cta-row">
+        <a class="btn-primary" href="https://wa.me/917005464704" target="_blank">🔬 Get a free quote</a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Projects done</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24h</div>
+      <div class="stat-label">Response time</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Custom made</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">All</div>
+      <div class="stat-label">Grade levels</div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="section-tag">What we make</div>
+    <h2 class="section-title">Every subject. Every grade.</h2>
+    <div class="service-grid">
+      <div class="service-card">
+        <span class="service-icon">⚡</span>
+        <div class="service-name">Working models</div>
+        <div class="service-desc">Circuits, motors, solar panels, wind turbines — models that actually function and impress judges.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🧬</span>
+        <div class="service-name">Biology models</div>
+        <div class="service-desc">Cell structure, DNA helix, human organs — detailed, colorful, and scientifically accurate.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🌍</span>
+        <div class="service-name">3D displays</div>
+        <div class="service-desc">Volcanoes, ecosystems, geography terrain maps, and environmental science projects.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🔭</span>
+        <div class="service-name">Physics models</div>
+        <div class="service-desc">Simple machines, force demonstrations, planetary motion, and optics displays.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🧪</span>
+        <div class="service-name">Chemistry boards</div>
+        <div class="service-desc">Periodic table models, molecular structures, reaction diagrams, and element charts.</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">📐</span>
+        <div class="service-name">Custom orders</div>
+        <div class="service-desc">Have a unique topic? Share your requirements and we'll craft exactly what you need.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="section-tag">The process</div>
+    <h2 class="section-title">Simple as 1-2-3</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Contact us</div>
+        <div class="step-desc">Share your project topic, grade level, and deadline via WhatsApp or call.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">We plan it</div>
+        <div class="step-desc">We discuss design, materials, and send you a quote. Quick and transparent.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">We build it</div>
+        <div class="step-desc">Your model is crafted with care and delivered before your deadline.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">You present</div>
+        <div class="step-desc">Walk in confident with a professional model that stands out from the crowd.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DELIVERY -->
+  <section class="delivery" id="delivery">
+    <div class="section-tag">Where we serve</div>
+    <h2 class="section-title">Based in Guwahati.<br>Delivering all over Guwahati.</h2>
+    <p class="delivery-sub">We're a local Guwahati business. Once your model is ready, we deliver it straight to your door — no need to travel. Whether you're in Dispur, Paltan Bazaar, Beltola, Kahilipara, Narengi, Zoo Road, or anywhere else in the city, we've got you covered.</p>
+    <div class="delivery-chips">
+      <div class="d-chip">📍 Dispur</div>
+      <div class="d-chip">📍 Paltan Bazaar</div>
+      <div class="d-chip">📍 Beltola</div>
+      <div class="d-chip">📍 Kahilipara</div>
+      <div class="d-chip">📍 Narengi</div>
+      <div class="d-chip">📍 Zoo Road</div>
+      <div class="d-chip">📍 Rukminigaon</div>
+      <div class="d-chip">📍 Ganeshguri</div>
+      <div class="d-chip">📍 + anywhere in Guwahati</div>
+    </div>
+  </section>
+  <section class="contact" id="contact">
+    <div class="contact-card">
+      <div class="contact-left">
+        <div class="tag">Get in touch</div>
+        <h2>Ready to start your project?</h2>
+        <p>Message us on WhatsApp or call — we respond fast and deliver across Guwahati.</p>
+      </div>
+      <div class="contact-chips">
+        <a class="chip" href="tel:+917005464704">
+          <span class="chip-icon">📞</span>
+          +91 70054 64704
+        </a>
+        <a class="chip" href="https://wa.me/917005464704" target="_blank">
+          <span class="chip-icon">💬</span>
+          WhatsApp: 70054 64704
+        </a>
+        <a class="chip" href="mailto:shubham_ray@outlook.com">
+          <span class="chip-icon">✉️</span>
+          shubham_ray@outlook.com
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo">⚗️ <span>BuildMyProject</span></div>
+    <p>BuildMyProject · Custom school science project model making · Based in Guwahati · Delivery all over Guwahati</p>
+  </footer>
+
+</body>
+</html>
